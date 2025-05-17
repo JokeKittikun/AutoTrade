@@ -8,7 +8,6 @@
         <link href="logo.png" rel='apple-touch-icon' sizes='120x120'/>
         <link href="logo.png" rel='apple-touch-icon' sizes='152x152'/>
         <link href="logo.png" rel='shortcut icon' type='image/x-icon'/>
-        
         <title>Binary Bot Pro - Smart Auto Trading</title>
         <link rel="stylesheet" href="assets/style.css">
         <link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet" />
@@ -33,7 +32,7 @@
             <div class="description">
                 <p>To get your API token:</p>
                 <ol>
-                    <li>Log in to your <a href="https://record.binary.com/_kHR1b8k0muStBVQhPcxVXGNd7ZgqdRLk/1/" target="_blank" rel="noopener noreferrer" class="text-emerald-400 hover:underline">Deriv account</a></li>
+                    <li>Log in to your <a href="https://app.deriv.com" target="_blank" rel="noopener noreferrer" class="text-emerald-400 hover:underline">Deriv account</a></li>
                     <li>Go to Settings &gt; API Token</li>
                     <li>Create a new token with "Trade" permission</li>
                     <li>Copy and paste the token here</li>
@@ -282,6 +281,7 @@
 
                         }
 
+                        // console.log(diff[i]);
 
 
 
@@ -299,6 +299,7 @@
                                 ws.close();
                                 isAuthorized = false;
                                 startAnalyzing = true;
+                                diffPrice = [];
                                 strategy1();
                             }
                         }
@@ -398,7 +399,7 @@
                     <td class="${statusClass}">${profit.toFixed(2)}</td>
                     <td class="${statusClass}">${statusText}</td>
                 `;
-                console.log(poc);
+                // console.log(poc);
 
                 table.insertBefore(row, table.firstChild);
                 // table.appendChild(row);
