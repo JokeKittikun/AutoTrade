@@ -305,17 +305,17 @@
                         }
 
 
-                        if (data.msg_type === 'buy') {
-                            lastContractId = data.buy.contract_id;
-                            document.getElementById('status').textContent = `Bought contract ID: ${lastContractId}`;
-                            ws.send(JSON.stringify({
-                                proposal_open_contract: 1,
-                                contract_id: lastContractId,
-                                subscribe: 1
-                            }));
-                            startAnalyzing = false;
+                        // if (data.msg_type === 'buy') {
+                        //     lastContractId = data.buy.contract_id;
+                        //     document.getElementById('status').textContent = `Bought contract ID: ${lastContractId}`;
+                        //     ws.send(JSON.stringify({
+                        //         proposal_open_contract: 1,
+                        //         contract_id: lastContractId,
+                        //         subscribe: 1
+                        //     }));
+                        //     startAnalyzing = false;
                             
-                        }
+                        // }
 
                         if (data.error) {
                             document.getElementById('status').textContent = `Error: ${data.error.message}`;
