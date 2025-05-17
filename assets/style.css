@@ -208,6 +208,7 @@ ol {
     display: flex;
     flex-wrap: wrap;
     grid-gap: 16px;
+    overflow-x: auto;
 }
 .flex-1 {
     flex: 1
