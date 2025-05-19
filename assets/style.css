@@ -266,6 +266,3 @@ h1 {
 .bd-box {
     border: 2px solid var(--border);
 }
-.toast-close {
-    display: none;
-}
