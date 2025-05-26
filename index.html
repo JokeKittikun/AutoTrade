@@ -412,7 +412,7 @@
                     startAnalyzing = true;
                     ws.onmessage = (event) => {
                         const data = JSON.parse(event.data);
-                  
+                        var count = 0;
                         // const trade_type = "ACCU";
                         
                         const diff = [0]//[0.39, 0.43, 0.05, 46, 0.97, 0.4, 66, 52.7, 1.82, 0.3]
@@ -445,10 +445,13 @@
                             const time = new Date(tick.epoch * 1000).toLocaleTimeString();
 
                             const digits = price.replace('.', '');
-                            const lastDigit_1 = digits[digits.length - 1];
-                            const lastDigit_2 = digits[digits.length - 2];
-                                
-                            if (lastDigit_2 >=6 && lastDigit_1 >= 7) {
+                            const lastDigit = digits[digits.length - 1];
+                            if (lastDigit >= 6){
+                                count++
+                            } else {
+                                count = 0;
+                            }
+                            if (count == 2) {
                                 buyContractStrategy2("DIGITDIFF", symbol[i], stake, "0");
                             }
 
