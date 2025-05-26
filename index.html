@@ -474,11 +474,7 @@
                             if (poc.is_sold) {
                                 addResultRow(poc);
                                 lastContractId = null;
-                                if (i == (symbol.length - 1)) {
-                                    i = 0;
-                                } else {
-                                    i++;
-                                }
+
                                 ws.close();
                                 isAuthorized = false;
                                 startAnalyzing = true;
@@ -617,6 +613,7 @@
                         }
                     }).showToast();
                 } else {
+                    i++;
                     Toastify({
                         text: "Loss " + profit + "$ ",
                         duration: 3000,
@@ -627,6 +624,10 @@
                             background: "red"
                         }
                     }).showToast();
+                }
+
+                if (i == (symbol.length - 1)) {
+                    i = 0;
                 }
 
                 sessionProfit += profit;
