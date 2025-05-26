@@ -399,7 +399,7 @@
 
 
             function strategy2() {
-
+                var count = 0;
                 if (!isAuthorized) {
                     const token = tokenInput.value.trim();
                     if (!token) {
@@ -412,7 +412,7 @@
                     startAnalyzing = true;
                     ws.onmessage = (event) => {
                         const data = JSON.parse(event.data);
-                        var count = 0;
+                        
                         // const trade_type = "ACCU";
                         
                         const diff = [0]//[0.39, 0.43, 0.05, 46, 0.97, 0.4, 66, 52.7, 1.82, 0.3]
@@ -636,6 +636,7 @@
 
                 sessionProfit += profit;
                 sessionTrades++;
+                count = 0;
 
  
                 if (sessionProfit > 0) {
