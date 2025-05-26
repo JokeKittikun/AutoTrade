@@ -446,7 +446,7 @@
 
                             const digits = price.replace('.', '');
                             const lastDigit = digits[digits.length - 1];
-                            if (lastDigit >= 6){
+                            if (lastDigit == 0){
                                 count++
                             } else {
                                 count = 0;
@@ -558,7 +558,7 @@
                                 contract_type: type,
                                 barrier: barrier,
                                 currency: "USD",
-                                duration: 4,
+                                duration: 1,
                                 duration_unit: "t",
                                 // growth_rate: 0.01,
                                 // limit_order: {
