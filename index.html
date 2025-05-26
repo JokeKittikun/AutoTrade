@@ -149,7 +149,8 @@
             const connectButton = document.getElementById("connect");
             const tokenInput = document.getElementById("api-token");
             const token = tokenInput.value.trim();
-
+            const symbol = ["R_10", "R_25", "R_50", "R_75", "R_100", "1HZ10V", "1HZ25V", "1HZ50V", "1HZ75V", "1HZ100V"];
+            
             document.getElementById("connect").addEventListener("click", () => authorize());
 
             function authorize() {
@@ -413,7 +414,7 @@
                         const data = JSON.parse(event.data);
                   
                         // const trade_type = "ACCU";
-                        const symbol = ["R_10", "R_25", "R_50", "R_75", "R_100", "1HZ10V", "1HZ25V", "1HZ50V", "1HZ75V", "1HZ100V"];
+                        
                         const diff = [0]//[0.39, 0.43, 0.05, 46, 0.97, 0.4, 66, 52.7, 1.82, 0.3]
                         const stake = 10.4;
                         const tp = 0.5;
