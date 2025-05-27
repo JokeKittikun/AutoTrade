@@ -400,6 +400,7 @@
 
             function strategy2() {
                 var count = 0;
+                var maxDecimal = 0;
                 if (!isAuthorized) {
                     const token = tokenInput.value.trim();
                     if (!token) {
@@ -437,24 +438,52 @@
                         if (data.msg_type === 'balance') {
                             document.getElementById('balance').textContent = parseFloat(data.balance.balance).toFixed(2);
                         }
-
+                        
                         if (data.msg_type === 'tick' && startAnalyzing == true) {
+                            
+                            function getLastDigit(quote) {
+                                const normalized = Number(quote).toString(); // Convert to string without trailing zeros
+                                if (normalized.includes('.')) {
+                                    if (normalized.split('.')[1].length > maxDecimal) {
+                                        maxDecimal = normalized.split('.')[1].length;
+                                    }
+                                }
+                                const fixed = Number(quote).toFixed(maxDecimal);
+                                const lastChar = fixed.charAt(fixed.length - 1);
+                                return lastChar;
+                            }
 
-                            const price = data.tick.quote.toString();
+                            function getTick(quote) {
+                                const normalized = Number(quote).toString(); // Convert to string without trailing zeros
+                                if (normalized.includes('.')) {
+                                    if (normalized.split('.')[1].length > maxDecimal) {
+                                        maxDecimal = normalized.split('.')[1].length;
+                                    }
+                                }
+                                const fixed = Number(quote).toFixed(maxDecimal);
+                                return fixed;
+                            }
+
+      
+
+
+                            const price = getTick(data.tick.quote);
                             const tick = data.tick;
+
+
+
+                            diffPrice.unshift(`${price}`);
+                            if (diffPrice.length > 2) diffPrice.pop();
+
                             const time = new Date(tick.epoch * 1000).toLocaleTimeString();
+                            const lastDigit = getLastDigit(data.tick.quote);
 
-                            const digits = price.replace('.', '');
-                            const lastDigit = digits[digits.length - 1];
-                            if (lastDigit == 0){
-                                count++
-                            } else {
-                                count = 0;
+                            if (diffPrice.length == 2) {
+                                if (getTick(diffPrice[0]) == getTick(diffPrice[1])) {
+                                    buyContractStrategy2("DIGITDIFF", symbol[i], stake, getLastDigit(diffPrice[0]));
+                                }
                             }
-                            if (count == 2) {
-                                buyContractStrategy2("DIGITDIFF", symbol[i], stake, "0");
-                            }
-
+                          
                             document.getElementById('status').textContent = time + " " + price + ' - Analyzing ...';
                             Toastify({
                                 text: "Bot analyzing ... ",
