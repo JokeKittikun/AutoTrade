@@ -604,11 +604,11 @@
             function strategy3() {
                 var maxDecimal = 0;
                 var start_analyzing = false;
-                nextFakeTrade = false;
+            
                 var ticks = [];
                 var up = 0;
                 var down = 0;
-                var fakeTrade = "";
+           
 
                 if (!isAuthorized) {
                     const token = tokenInput.value.trim();
@@ -696,11 +696,10 @@
                                 }
                                 
                                 if (up + down > 9) {
-                                    ticks.push(data.tick.quote);
-                                    if (up > down && up - down >= 3) {
+                                    if (up > down && up - down >= 4) {
                                         // Strong SELL
                                         buyContract("PUT", "R_100", "10", "", "5");
-                                    } else if (up < down && down - up >= 3) {
+                                    } else if (up < down && down - up >= 4) {
                                         // Strong BUY
                                         buyContract("CALL", "R_100", "10", "", "5");
                                     } else {
