@@ -699,59 +699,17 @@
                                     ticks.push(data.tick.quote);
                                     if (up > down && up - down >= 3) {
                                         // Strong SELL
-                                        fakeTrade = "PUT";
+                                        buyContract("PUT", "R_100", "10", "", "5");
                                     } else if (up < down && down - up >= 3) {
                                         // Strong BUY
-                                        fakeTrade = "CALL";
+                                        buyContract("CALL", "R_100", "10", "", "5");
                                     } else {
                                         // None
                                     }
                                 } 
 
-                                if (ticks.length == 16 && fakeTrade == "PUT") {
-                                    if (ticks[10] >= ticks[15] ) {
-                                        console.log("Result: Win");
-                                        nextFakeTrade = true;
-                                    } else if (ticks[10] < ticks[15]) {
-                                        console.log("Result: Loss");
-                                        nextFakeTrade = false;
-                                    }
-                                    ticks = [];
-                                    up = 0;
-                                    down = 0;
-                                    fakeTrade = "";
-                                } else if (ticks.length == 16 && fakeTrade == "CALL") {
-                                    if (ticks[10] <= ticks[15] ) {
-                                        console.log("Result: Win");
-                                        nextFakeTrade = true;
-                                    } else if (ticks[10] > ticks[15]) {
-                                        console.log("Result: Loss");
-                                        nextFakeTrade = false;
-                                    }
-                                    ticks = [];
-                                    up = 0;
-                                    down = 0;
-                                    fakeTrade = "";
-                                } else if (ticks.length > 16) {
-                                    ticks = [];
-                                    up = 0;
-                                    down = 0;
-                                    fakeTrade = "";
-                                }
-
-
-                                if (up + down > 9 && nextFakeTrade == true) {
-                                    if (up > down && up - down >= 3) {
-                                        // Strong SELL
-                                        buyContract("PUT", "R_100", "10", "", "5");
-                                    } else if (up < down && down - up >= 3) {
-                                        // Strong BUY
-                                        buyContract("CALL", "R_100", "10", "", "5");
-                                    }
-                                } 
-
                             } 
-                            console.log(ticks, fakeTrade, nextFakeTrade);
+
 
                             if (s.substr(-2) === "50") {
                                 ticks = [];
