@@ -150,7 +150,10 @@
             const tokenInput = document.getElementById("api-token");
             const token = tokenInput.value.trim();
             const symbol = ["R_10", "R_25", "R_50", "R_75", "R_100", "1HZ10V", "1HZ25V", "1HZ50V", "1HZ75V", "1HZ100V"];
-            
+            var initialStake = 10;
+            var winStake = 10;
+            var margin = 2;
+
             document.getElementById("connect").addEventListener("click", () => authorize());
 
             function authorize() {
@@ -604,7 +607,7 @@
             function strategy3() {
                 var maxDecimal = 0;
                 var start_analyzing = false;
-            
+
                 var ticks = [];
                 var up = 0;
                 var down = 0;
@@ -698,10 +701,10 @@
                                 if (up + down > 9) {
                                     if (up > down && up - down >= 3) {
                                         // Strong SELL
-                                        buyContract("PUT", "R_100", "10", "", "5");
+                                        buyContract("PUT", "R_100", initialStake, "", "5");
                                     } else if (up < down && down - up >= 3) {
                                         // Strong BUY
-                                        buyContract("CALL", "R_100", "10", "", "5");
+                                        buyContract("CALL", "R_100", initialStake, "", "5");
                                     } else {
                                         // None
                                     }
@@ -887,6 +890,7 @@
                 const statusText = profit > 0 ? "Win" : "Loss";
                 const statusClass = profit > 0 ? "win" : "loss";
                 if (profit >= 0) {
+                    initialStake = winStake;
                     sessionWin++;
                     Toastify({
                         text: "Win " + profit + "$ ",
@@ -899,6 +903,7 @@
                         }
                     }).showToast();
                 } else {
+                    initialStake = initialStake * martingale;
                     i++;
                     Toastify({
                         text: "Loss " + profit + "$ ",
