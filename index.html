@@ -787,6 +787,16 @@
                                 contract_id: lastContractId,
                                 subscribe: 1
                             }));
+                            Toastify({
+                                text:  `Bought contract ID: ${lastContractId}`;,
+                                duration: 3000,
+                                close: false,
+                                gravity: "bottom",
+                                position: "left",
+                                style: {
+                                    background: "blue"
+                                }
+                            }).showToast();
                             startAnalyzing = false;
                             
                         }
@@ -947,7 +957,7 @@
                     <td>${poc.contract_id}</td>
                     <td>${poc.contract_type}</td>
                     <td>${poc.display_name}</td>
-                    <td>${initialStake}</td>
+                    <td>${poc.buy_price}</td>
                     <td class="${statusClass}">${profit.toFixed(2)}</td>
                     <td class="${statusClass}">${statusText}</td>
                 `;
