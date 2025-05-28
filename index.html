@@ -696,10 +696,10 @@
                                 }
                                 
                                 if (up + down > 9) {
-                                    if (up > down && up - down >= 4) {
+                                    if (up > down && up - down >= 3) {
                                         // Strong SELL
                                         buyContract("PUT", "R_100", "10", "", "5");
-                                    } else if (up < down && down - up >= 4) {
+                                    } else if (up < down && down - up >= 3) {
                                         // Strong BUY
                                         buyContract("CALL", "R_100", "10", "", "5");
                                     } else {
