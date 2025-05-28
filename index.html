@@ -702,10 +702,10 @@
                                 if (up + down > 10) {
                                     if (up > down && up - down >= 3) {
                                         // Strong SELL
-                                        buyContract("PUT", "R_100", initialStake, "+0.5", "10");
+                                        buyContract("PUT", "R_100", initialStake, "", "5");
                                     } else if (up < down && down - up >= 3) {
                                         // Strong BUY
-                                        buyContract("CALL", "R_100", initialStake, "+0.5", "10");
+                                        buyContract("CALL", "R_100", initialStake, "", "5");
                                     } else {
                                         // None
                                     }
@@ -857,7 +857,7 @@
                                 amount: stake,
                                 basis: "stake",
                                 contract_type: type,
-                                barrier: barrier,
+                                // barrier: barrier,
                                 currency: "USD",
                                 duration: duration,
                                 duration_unit: "t",
