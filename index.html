@@ -114,7 +114,7 @@
                             <th>Contract ID</th>
                             <th>Type</th>
                             <th>Symbol</th>
-                            <th>Tick</th>
+                            <th>Stake</th>
                             <th>Profit/Loss</th>
                             <th>Status</th>
                         </tr>
@@ -153,6 +153,11 @@
             var initialStake = 10;
             var winStake = 10;
             var martingale = 2;
+            var maxDecimal = 0;
+            var start_analyzing = false;
+            var ticks = [];
+            var up = 0;
+            var down = 0;
 
             document.getElementById("connect").addEventListener("click", () => authorize());
 
@@ -605,12 +610,7 @@
             
 
             function strategy3() {
-                var maxDecimal = 0;
-                var start_analyzing = false;
 
-                var ticks = [];
-                var up = 0;
-                var down = 0;
            
 
                 if (!isAuthorized) {
@@ -622,7 +622,7 @@
 
                     ws = new WebSocket('wss://ws.derivws.com/websockets/v3?app_id=1089');
                     ws.onopen = () => ws.send(JSON.stringify({ authorize: token }));
-                    startAnalyzing = true;
+
                     ws.onmessage = (event) => {
                         const data = JSON.parse(event.data);
                     
@@ -645,7 +645,7 @@
                             document.getElementById('balance').textContent = parseFloat(data.balance.balance).toFixed(2);
                         }
                         
-                        if (data.msg_type === 'tick' && startAnalyzing == true) {
+                        if (data.msg_type === 'tick') {
                             
                             function getLastDigit(quote) {
                                 const normalized = Number(quote).toString(); // Convert to string without trailing zeros
@@ -681,12 +681,12 @@
                             if (s.substr(-2) === "00") {
                                 start_analyzing = true;
                             }
-                        
+                            
                             if (start_analyzing == true) {
 
-                                if (up + down <= 9) {
+                                if (up + down <= 10) {
+                                    
                                     ticks.push(data.tick.quote);
-
                                     
                                     if (data.tick.quote > ticks[ticks.length-2]) {
                                         up = up + 1;
@@ -696,18 +696,22 @@
                                         up = 0;
                                         down = 0;
                                     }
+                                    
                                 }
                                 
-                                if (up + down > 9) {
-                                    if (up > down && up - down >= 3) {
+                                if (up + down > 10) {
+                                    if (up > down && up - down >= 4) {
                                         // Strong SELL
                                         buyContract("PUT", "R_100", initialStake, "", "5");
-                                    } else if (up < down && down - up >= 3) {
+                                    } else if (up < down && down - up >= 4) {
                                         // Strong BUY
                                         buyContract("CALL", "R_100", initialStake, "", "5");
                                     } else {
                                         // None
                                     }
+                                    ticks = [];
+                                    up = 0;
+                                    down = 0;
                                 } 
 
                             } 
@@ -715,9 +719,10 @@
 
                             if (s.substr(-2) === "50") {
                                 ticks = [];
+                                up = 0;
+                                down = 0;
                                 start_analyzing = false;
                             }
-
 
 
 
@@ -923,7 +928,6 @@
 
                 sessionProfit += profit;
                 sessionTrades++;
-                count = 0;
 
  
                 if (sessionProfit > 0) {
@@ -943,7 +947,7 @@
                     <td>${poc.contract_id}</td>
                     <td>${poc.contract_type}</td>
                     <td>${poc.display_name}</td>
-                    <td>${poc.entry_tick_display_value}</td>
+                    <td>${initialStake}</td>
                     <td class="${statusClass}">${profit.toFixed(2)}</td>
                     <td class="${statusClass}">${statusText}</td>
                 `;
