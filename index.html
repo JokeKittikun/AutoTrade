@@ -362,7 +362,7 @@
                                 tickHistory.push(tickPrice);
 
                                 if (tickHistory.length > TICK_HISTORY_SIZE) {
-                                    tickHistory.shift();
+                                    tickHistory.length = 0;
                                 }
 
                                 if (tickHistory.length === TICK_HISTORY_SIZE && Date.now() - lastTradeTime > TRADE_COOLDOWN) {
@@ -419,7 +419,7 @@
 
                             ws.close();
                             isAuthorized = false;
-                            startAnalyzing = true;
+                            start_analyzing = true;
                             TickPickerV1();
                         }
                     }
@@ -433,7 +433,7 @@
                             contract_id: lastContractId,
                             subscribe: 1
                         }));
-                        startAnalyzing = false;
+                        start_analyzing = false;
 
                     } else if (data.msg_type === 'buy' && data.error) {
                         console.error('Buy error:', data.error.message);
