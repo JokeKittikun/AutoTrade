@@ -159,11 +159,8 @@
         var start_analyzing = false;
 
 
-    const TICK_HISTORY_SIZE = 20;
-    const TRADE_COOLDOWN = 30000; // 30 seconds
-
+    const TICK_HISTORY_SIZE = 50;
     let tickHistory = [];
-    let lastTradeTime = 0;
 
     function mode(arr) {
         const freq = {};
@@ -288,19 +285,16 @@
                                     tickHistory.length = 0;
                                 }
 
-                                if (tickHistory.length === TICK_HISTORY_SIZE && Date.now() - lastTradeTime > TRADE_COOLDOWN) {
-                                    // Find cluster center (mode)
+                                if (tickHistory.length === TICK_HISTORY_SIZE) {
                                     const clusterCenter = mode(tickHistory);
 
                                     if (clusterCenter !== null) {
-                                        // Decide direction based on current tick vs cluster center
                                         let signal = null;
                                         if (tickPrice < clusterCenter) signal = 'CALL';
                                         else if (tickPrice > clusterCenter) signal = 'PUT';
 
                                         if (signal) {
                                             buyContract(signal, symbol[i], initialStake, "", "5", "t");
-                                            lastTradeTime = Date.now();
                                         }
                                     }
                                 }
