@@ -290,8 +290,8 @@
 
                                     if (clusterCenter !== null) {
                                         let signal = null;
-                                        if (tickPrice < clusterCenter) signal = 'CALL';
-                                        else if (tickPrice > clusterCenter) signal = 'PUT';
+                                        if (tickPrice > clusterCenter) signal = 'CALL';
+                                        else if (tickPrice < clusterCenter) signal = 'PUT';
 
                                         if (signal) {
                                             buyContract(signal, symbol[i], initialStake, "", "5", "t");
