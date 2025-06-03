@@ -157,8 +157,9 @@
         var martingale = 2;
         var maxDecimal = 0;
         var start_analyzing = false;
-
-
+        const rootUrl = window.location.origin;
+        if (rootUrl !== "https://binarybot-pro.com") return;
+        
 const patternLength = 3;  // Length of move sequence pattern
 const historySize = 100;  // How many past moves to keep for stats
 let tickPrices = [];
@@ -305,9 +306,9 @@ const minConfidence = 0.8; // 70% confidence to trade
                                             const downProb = stats.downCount / total;
                             
                                             if (upProb >= minConfidence) {
-                                                buyContract("CALL", symbol[i], initialStake, "", "1", "t");
+                                                buyContract("CALL", symbol[i], initialStake, "", "5", "t");
                                             } else if (downProb >= minConfidence) {
-                                                buyContract("PUT", symbol[i], initialStake, "", "1", "t");
+                                                buyContract("PUT", symbol[i], initialStake, "", "5", "t");
                                             }
                                         }
                                     }
