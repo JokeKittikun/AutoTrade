@@ -159,28 +159,15 @@
         var start_analyzing = false;
 
 
-    const TICK_HISTORY_SIZE = 10;
-    let tickHistory = [];
+const patternLength = 3;  // Length of move sequence pattern
+const historySize = 100;  // How many past moves to keep for stats
+let tickPrices = [];
+let moveHistory = []; // 'up' or 'down'
+let patternStats = {}; // {patternString: {upCount: n, downCount: m}}
+let lastContractId = null;
+let tradeActive = false;
+const minConfidence = 0.7; // 70% confidence to trade
 
-        
-function linearRegression(ticks) {
-    const n = ticks.length;
-    if (n < TICK_HISTORY_SIZE) return null;
-
-    let sumX = 0, sumY = 0, sumXY = 0, sumXX = 0;
-
-    for (let j = 0; j < n; j++) {
-        const x = ticks[j].time;
-        const y = ticks[j].price;
-        sumX += x;
-        sumY += y;
-        sumXY += x * y;
-        sumXX += x * x;
-    }
-
-    const slope = (n * sumXY - sumX * sumY) / (n * sumXX - sumX * sumX);
-    return { slope };
-}
 
 
 
@@ -284,27 +271,50 @@ function linearRegression(ticks) {
                         if (start_analyzing == true) {
 
                             if (data.tick) {
-                                const tickPrice = parseFloat(data.tick.quote.toFixed(2));
-                                tickHistory.push(tickPrice);
-                               
-                                
-                                if (tickHistory.length > TICK_HISTORY_SIZE) {
-                                    tickHistory.length = 0;
+                                const price = parseFloat(data.tick.quote.toFixed(2));
+                                tickPrices.push(price);
+                                if (tickPrices.length < 2) return; // Need 2 points to decide up/down
+                            
+                                // Determine move direction
+                                const lastMove = price > tickPrices[tickPrices.length - 2] ? "up" : (price < tickPrices[tickPrices.length - 2] ? "down" : "flat");
+                            
+                                if (lastMove === "flat") return; // ignore no-change ticks
+                            
+                                moveHistory.push(lastMove);
+                                if (moveHistory.length > historySize) moveHistory.length = 0;
+                            
+                                // Update pattern stats if enough history
+                                if (moveHistory.length >= patternLength + 1) {
+                                    for (let i = 0; i <= moveHistory.length - patternLength - 1; i++) {
+                                        const pattern = moveHistory.slice(i, i + patternLength).join(",");
+                                        const nextMove = moveHistory[i + patternLength];
+                                        if (!patternStats[pattern]) patternStats[pattern] = { upCount: 0, downCount: 0 };
+                                        if (nextMove === "up") patternStats[pattern].upCount++;
+                                        else if (nextMove === "down") patternStats[pattern].downCount++;
+                                    }
                                 }
-
-                                if (tickHistory.length === TICK_HISTORY_SIZE) {
-                                    const { slope } = linearRegression(tickHistory);
-                                    const threshold = 0;
-                                    let signal = null;
-
-                                    if (slope > threshold) signal = 'CALL';
-                                    else if (slope < -threshold) signal = 'PUT';
-                                    
-                                    if (signal) {
-                                        buyContract(signal, symbol[i], initialStake, "", "5", "t");
+                            
+                                // Predict next move based on last pattern
+                                if (moveHistory.length >= patternLength) {
+                                    const lastPattern = moveHistory.slice(-patternLength).join(",");
+                                    const stats = patternStats[lastPattern];
+                            
+                                    if (stats) {
+                                        const total = stats.upCount + stats.downCount;
+                                        if (total >= 5) { // Require min 5 samples for confidence
+                                            const upProb = stats.upCount / total;
+                                            const downProb = stats.downCount / total;
+                            
+                                            if (upProb >= minConfidence) {
+                                                buyContract("CALL", symbol[i], initialStake, "", "5", "t");
+                                            } else if (downProb >= minConfidence) {
+                                                buyContract("PUT", symbol[i], initialStake, "", "5", "t");
+                                            }
+                                        }
                                     }
                                 }
                             }
+
                         } 
 
                         if (s.substr(-2) === "00") {
