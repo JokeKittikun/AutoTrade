@@ -162,19 +162,25 @@
     const TICK_HISTORY_SIZE = 10;
     let tickHistory = [];
 
-    function mode(arr) {
-        const freq = {};
-        let maxFreq = 0;
-        let modeValue = null;
-        for (const val of arr) {
-            freq[val] = (freq[val] || 0) + 1;
-            if (freq[val] > maxFreq) {
-                maxFreq = freq[val];
-                modeValue = val;
-            }
-        }
-        return modeValue;
+        
+function linearRegression(ticks) {
+    const n = ticks.length;
+    if (n < TICK_HISTORY_SIZE) return null;
+
+    let sumX = 0, sumY = 0, sumXY = 0, sumXX = 0;
+
+    for (let j = 0; j < n; j++) {
+        const x = ticks[j].time;
+        const y = ticks[j].price;
+        sumX += x;
+        sumY += y;
+        sumXY += x * y;
+        sumXX += x * x;
     }
+
+    const slope = (n * sumXY - sumX * sumY) / (n * sumXX - sumX * sumX);
+    return { slope };
+}
 
 
 
@@ -287,14 +293,13 @@
                                 }
 
                                 if (tickHistory.length === TICK_HISTORY_SIZE) {
-                                    let isUpTrend = tickHistory.slice(-3).every((v, i, arr) => i === 0 || v > arr[i - 1]);
-                                    let isDownTrend = tickHistory.slice(-3).every((v, i, arr) => i === 0 || v < arr[i - 1]);
-                                    // Moving Average
-                                    let sma = tickHistory.reduce((a, b) => a + b, 0) / tickHistory.length;
-                                    let lastPrice = tickHistory[tickHistory.length - 1];
+                                    const { slope } = linearRegression(tickHistory);
+                                    const threshold = 0;
                                     let signal = null;
-                                    if (isUpTrend && lastPrice > sma) signal = 'CALL';
-                                    else if (isDownTrend && lastPrice < sma) signal = 'PUT';
+
+                                    if (slope > threshold) signal = 'CALL';
+                                    else if (slope < -threshold) signal = 'PUT';
+                                    
                                     if (signal) {
                                         buyContract(signal, symbol[i], initialStake, "", "5", "t");
                                     }
