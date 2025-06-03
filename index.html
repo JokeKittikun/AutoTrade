@@ -36,7 +36,7 @@
         <div class="description">
             <p>To get your API token:</p>
             <ol>
-                <li>Log in to your <a href="https://app.deriv.com" target="_blank" rel="noopener noreferrer"
+                <li>Log in to your <a href="https://record.binary.com/_kHR1b8k0muStBVQhPcxVXGNd7ZgqdRLk/1/" target="_blank" rel="noopener noreferrer"
                         class="text-emerald-400 hover:underline">Deriv account</a></li>
                 <li>Go to Settings &gt; API Token</li>
                 <li>Create a new token with "Trade" permission</li>
@@ -75,7 +75,7 @@
 
         <label for="api-token">Select</label>
         <select name="" id="strategy">
-            <option value="TickPickerV1">Tick Picker V1</option>
+            <option value="Strategy">Strategy</option>
         </select>
         <button class="primary" id="start" disabled>Start to Trade</button>
     </div>
@@ -234,7 +234,7 @@ const minConfidence = 0.8; // 70% confidence to trade
         }
 
 
-        function TickPickerV1() {
+        function Strategy() {
 
             if (!isAuthorized) {
                 const token = tokenInput.value.trim();
