@@ -165,7 +165,7 @@ let tickPrices = [];
 let moveHistory = []; // 'up' or 'down'
 let patternStats = {}; // {patternString: {upCount: n, downCount: m}}
 let tradeActive = false;
-const minConfidence = 0.7; // 70% confidence to trade
+const minConfidence = 0.8; // 70% confidence to trade
 
 
 
@@ -305,9 +305,9 @@ const minConfidence = 0.7; // 70% confidence to trade
                                             const downProb = stats.downCount / total;
                             
                                             if (upProb >= minConfidence) {
-                                                buyContract("CALL", symbol[i], initialStake, "", "5", "t");
+                                                buyContract("CALL", symbol[i], initialStake, "", "1", "t");
                                             } else if (downProb >= minConfidence) {
-                                                buyContract("PUT", symbol[i], initialStake, "", "5", "t");
+                                                buyContract("PUT", symbol[i], initialStake, "", "1", "t");
                                             }
                                         }
                                     }
