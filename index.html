@@ -280,22 +280,23 @@
                             if (data.tick) {
                                 const tickPrice = parseFloat(data.tick.quote.toFixed(2));
                                 tickHistory.push(tickPrice);
-
+                               
+                                
                                 if (tickHistory.length > TICK_HISTORY_SIZE) {
                                     tickHistory.length = 0;
                                 }
 
                                 if (tickHistory.length === TICK_HISTORY_SIZE) {
-                                    const clusterCenter = mode(tickHistory);
-
-                                    if (clusterCenter !== null) {
-                                        let signal = null;
-                                        if (tickPrice > clusterCenter) signal = 'CALL';
-                                        else if (tickPrice < clusterCenter) signal = 'PUT';
-
-                                        if (signal) {
-                                            buyContract(signal, symbol[i], initialStake, "", "5", "t");
-                                        }
+                                    let isUpTrend = tickHistory.slice(-3).every((v, i, arr) => i === 0 || v > arr[i - 1]);
+                                    let isDownTrend = tickHistory.slice(-3).every((v, i, arr) => i === 0 || v < arr[i - 1]);
+                                    // Moving Average
+                                    let sma = tickHistory.reduce((a, b) => a + b, 0) / tickHistory.length;
+                                    let lastPrice = tickHistory[tickHistory.length - 1];
+                                    let signal = null;
+                                    if (isUpTrend && lastPrice > sma) signal = 'CALL';
+                                    else if (isDownTrend && lastPrice < sma) signal = 'PUT';
+                                    if (signal) {
+                                        buyContract(signal, symbol[i], initialStake, "", "5", "t");
                                     }
                                 }
                             }
